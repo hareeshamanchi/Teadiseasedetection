@@ -6,4 +6,7 @@ opencv-python-headless
 numpy
 pandas
 Pillow
-yolox==0.3.0
+loguru
+tqdm
+tabulate
+pycocotools
