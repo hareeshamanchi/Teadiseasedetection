@@ -6,4 +6,4 @@ opencv-python-headless
 numpy
 pandas
 Pillow
-git+https://github.com/Megvii-BaseDetection/YOLOX.git
+yolox==0.3.0
