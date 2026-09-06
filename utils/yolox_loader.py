@@ -1,14 +1,14 @@
+import sys
+sys.path.insert(0, "yolox")
+
 import torch
-
 from yolox.exp import get_exp
-
-
 # ============================================================
 # YOLOX MODEL CONFIGURATION
 # ============================================================
 
 CONFIG_PATH = "models/YOLOX/yolox_config.py"
-CHECKPOINT_PATH = "models/YOLOX/best_ckpt (2).pth"
+CHECKPOINT_PATH = "models/YOLOX/best_ckpt.pth"
 
 
 def load_yolox_model():

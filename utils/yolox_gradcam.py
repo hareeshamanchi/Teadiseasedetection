@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import torch
+import sys
+sys.path.insert(0, "yolox")
 
 
 # ============================================================
