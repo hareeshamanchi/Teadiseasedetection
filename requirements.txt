@@ -1,0 +1,9 @@
+streamlit
+ultralytics==8.4.140
+torch
+torchvision
+opencv-python-headless
+numpy
+pandas
+Pillow
+git+https://github.com/Megvii-BaseDetection/YOLOX.git
