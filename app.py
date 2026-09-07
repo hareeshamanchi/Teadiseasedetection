@@ -23,6 +23,141 @@ st.set_page_config(
     layout="wide"
 )
 
+# ============================================================
+# PREMIUM UI STYLING
+# ============================================================
+
+st.markdown("""
+<style>
+    .stApp {
+        background: linear-gradient(135deg, #f7faf8 0%, #eef6f1 45%, #f8fbf9 100%);
+    }
+
+    [data-testid="stHeader"] {
+        background: rgba(255,255,255,0);
+    }
+
+    .hero {
+        padding: 2.2rem 2.4rem;
+        border-radius: 28px;
+        background: linear-gradient(135deg, #0b3d2e 0%, #145a42 55%, #1d6b4f 100%);
+        color: white;
+        box-shadow: 0 18px 45px rgba(11,61,46,.18);
+        margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+        font-size: 2.7rem;
+        margin: 0 0 .45rem 0;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .hero p {
+        margin: 0;
+        font-size: 1.05rem;
+        opacity: .9;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: .35rem .75rem;
+        border-radius: 999px;
+        background: rgba(255,255,255,.14);
+        border: 1px solid rgba(255,255,255,.22);
+        margin: .8rem .35rem 0 0;
+        font-size: .82rem;
+        font-weight: 600;
+    }
+
+    .section-title {
+        font-size: 1.45rem;
+        font-weight: 800;
+        color: #123b2e;
+        margin: 1.1rem 0 .65rem 0;
+    }
+
+    .model-card {
+        padding: 1.15rem 1.3rem;
+        border-radius: 20px;
+        background: rgba(255,255,255,.88);
+        border: 1px solid #dce9e1;
+        box-shadow: 0 8px 25px rgba(20,70,50,.07);
+        min-height: 155px;
+    }
+
+    .model-name {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #123b2e;
+        margin-bottom: .7rem;
+    }
+
+    .prediction {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #176347;
+        margin-bottom: .7rem;
+    }
+
+    .metric-label {
+        color: #6b7c73;
+        font-size: .78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .6px;
+    }
+
+    .metric-value {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #18382d;
+    }
+
+    .upload-card {
+        padding: 1rem 1.25rem;
+        border: 1px dashed #91b5a4;
+        border-radius: 20px;
+        background: rgba(255,255,255,.72);
+        margin-bottom: 1rem;
+    }
+
+    .info-card {
+        padding: 1.15rem;
+        border-radius: 18px;
+        background: white;
+        border: 1px solid #e0ebe5;
+        height: 100%;
+        box-shadow: 0 7px 20px rgba(20,70,50,.05);
+    }
+
+    .footer {
+        text-align: center;
+        color: #718078;
+        padding: 1.5rem 0 .5rem 0;
+        font-size: .82rem;
+    }
+
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #f1f7f3 0%, #e8f2ec 100%);
+        border-right: 1px solid #d9e7df;
+    }
+
+    div[data-testid="stMetric"] {
+        background: white;
+        border: 1px solid #e0ebe5;
+        padding: .8rem;
+        border-radius: 15px;
+    }
+
+    .stButton > button, .stDownloadButton > button {
+        border-radius: 12px;
+        font-weight: 700;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
 
 # ============================================================
 # MODEL PATHS
@@ -159,61 +294,47 @@ def load_yolox():
 # HEADER
 # ============================================================
 
-st.title(
-    "🍃 Tea Leaf Disease Detection"
-)
-
-st.markdown(
-    """
-### YOLO11m + YOLOX-M + Explainable AI
-
-Upload a tea-leaf image to detect diseases using **two trained
-object-detection models** and visualize the model decision with
-Grad-CAM.
-"""
-)
+st.markdown("""
+<div class="hero">
+    <h1>🍃 Tea Leaf Disease Intelligence</h1>
+    <p>Dual-model tea leaf disease detection powered by YOLO11m, YOLOX-M and Explainable AI.</p>
+    <span class="badge">YOLO11m</span>
+    <span class="badge">YOLOX-M</span>
+    <span class="badge">Grad-CAM</span>
+    <span class="badge">1,481-image evaluation</span>
+</div>
+""", unsafe_allow_html=True)
 
 
 # ============================================================
 # SIDEBAR
 # ============================================================
 
-st.sidebar.title(
-    "⚙️ Detection Settings"
-)
+st.sidebar.title("🍃 Tea AI Console")
 
-confidence_threshold = st.sidebar.slider(
-    "YOLO11m Confidence",
-    min_value=0.05,
-    max_value=0.95,
-    value=0.25,
-    step=0.05
-)
+st.sidebar.success("Detection engine ready")
 
-yolox_confidence = st.sidebar.slider(
-    "YOLOX Confidence",
-    min_value=0.01,
-    max_value=0.95,
-    value=0.25,
-    step=0.01
+st.sidebar.markdown("### Model Configuration")
+st.sidebar.markdown(
+    "**YOLO11m**  \\n"
+    "Fixed confidence: **39%**"
 )
-
+st.sidebar.markdown(
+    "**YOLOX-M**  \\n"
+    "Fixed confidence: **25%**"
+)
 
 st.sidebar.markdown("---")
+st.sidebar.markdown("### Research Configuration")
+st.sidebar.caption("Dataset: Merged_Dataset_2")
+st.sidebar.caption("Evaluation images: 1,481")
+st.sidebar.caption("Ground-truth boxes: 2,695")
+st.sidebar.caption("No user-facing confidence controls")
 
+st.sidebar.markdown("---")
 st.sidebar.info(
-    """
-**Models**
-
-YOLO11m:
-40.5 MB trained checkpoint
-
-YOLOX-M:
-202 MB trained checkpoint
-
-Both models are used for independent
-prediction and explanation.
-"""
+    "Predictions are generated independently by both trained models. "
+    "YOLOX Grad-CAM provides an additional visual explanation."
 )
 
 
@@ -266,15 +387,17 @@ with st.sidebar:
 # IMAGE UPLOAD
 # ============================================================
 
+st.markdown('<div class="upload-card">', unsafe_allow_html=True)
+st.markdown("### 📤 Upload a Tea-Leaf Image")
 uploaded_file = st.file_uploader(
-    "📤 Upload a tea-leaf image",
+    "Choose a JPG, JPEG or PNG image",
     type=[
         "jpg",
         "jpeg",
         "png"
     ]
 )
-
+st.markdown('</div>', unsafe_allow_html=True)
 
 if uploaded_file is None:
 
@@ -309,15 +432,8 @@ image_bgr = cv2.cvtColor(
 # ORIGINAL IMAGE
 # ============================================================
 
-st.subheader(
-    "📷 Uploaded Image"
-)
-
-st.image(
-    pil_image,
-    caption=uploaded_file.name,
-    width="stretch"
-)
+st.markdown('<div class="section-title">📷 Input Image</div>', unsafe_allow_html=True)
+st.image(pil_image, caption=uploaded_file.name, width="stretch")
 
 
 # ============================================================
@@ -333,7 +449,7 @@ with st.spinner(
     yolo11_results = yolo11_model.predict(
         source=image_rgb,
         imgsz=640,
-        conf=confidence_threshold,
+        conf=YOLO11_CONF_THRESHOLD,
         iou=0.45,
         verbose=False
     )
@@ -365,7 +481,7 @@ with st.spinner(
         exp=yolox_exp,
         device=yolox_device,
         image=image_bgr,
-        confidence_threshold=yolox_confidence
+        confidence_threshold=YOLOX_CONF_THRESHOLD
     )
 
     yolox_time = (
@@ -513,9 +629,7 @@ if len(yolox_df) > 0:
 
 st.markdown("---")
 
-st.header(
-    "🔎 Detection Results"
-)
+st.markdown('<div class="section-title">🔎 Detection Results</div>', unsafe_allow_html=True)
 
 
 col1, col2 = st.columns(2)
@@ -527,9 +641,7 @@ col1, col2 = st.columns(2)
 
 with col1:
 
-    st.subheader(
-        "🟦 YOLO11m"
-    )
+    st.markdown('<div class="model-name">🟦 YOLO11m · Primary Detector</div>', unsafe_allow_html=True)
 
     if yolo11_top is not None:
 
@@ -565,9 +677,7 @@ with col1:
 
 with col2:
 
-    st.subheader(
-        "🟥 YOLOX-M"
-    )
+    st.markdown('<div class="model-name">🟥 YOLOX-M · Independent Detector</div>', unsafe_allow_html=True)
 
     if yolox_top is not None:
 
@@ -603,9 +713,7 @@ with col2:
 
 st.markdown("---")
 
-st.header(
-    "📦 Bounding Box Predictions"
-)
+st.markdown('<div class="section-title">📦 Bounding Box Predictions</div>', unsafe_allow_html=True)
 
 
 col1, col2 = st.columns(2)
@@ -687,9 +795,7 @@ with col2:
 
 st.markdown("---")
 
-st.header(
-    "📋 All Predictions"
-)
+st.markdown('<div class="section-title">📋 Detailed Predictions</div>', unsafe_allow_html=True)
 
 
 col1, col2 = st.columns(2)
@@ -801,9 +907,7 @@ with col2:
 
 st.markdown("---")
 
-st.header(
-    "🦠 Disease Details"
-)
+st.markdown('<div class="section-title">🦠 Disease Intelligence</div>', unsafe_allow_html=True)
 
 
 disease_for_info = None
@@ -876,9 +980,7 @@ if disease_for_info is not None:
 
 st.markdown("---")
 
-st.header(
-    "🔥 YOLOX-M Grad-CAM"
-)
+st.markdown('<div class="section-title">🔥 Explainable AI · YOLOX-M Grad-CAM</div>', unsafe_allow_html=True)
 
 st.caption(
     "The heatmap highlights image regions contributing "
@@ -1038,9 +1140,7 @@ else:
 
 st.markdown("---")
 
-st.header(
-    "⚖️ YOLO11m vs YOLOX-M"
-)
+st.markdown('<div class="section-title">⚖️ Model Comparison</div>', unsafe_allow_html=True)
 
 
 comparison_rows = []
@@ -1131,9 +1231,7 @@ if comparison_rows:
 
 st.markdown("---")
 
-st.header(
-    "📥 Download Results"
-)
+st.markdown('<div class="section-title">📥 Research Outputs</div>', unsafe_allow_html=True)
 
 
 all_download_rows = []
@@ -1187,8 +1285,10 @@ if all_download_rows:
 
 st.markdown("---")
 
-st.caption(
-    "Tea Leaf Disease Detection | "
-    "YOLO11m + YOLOX-M | "
-    "Explainable AI"
-)
+st.markdown("""
+<div class="footer">
+    <b>Tea Leaf Disease Intelligence</b><br>
+    YOLO11m + YOLOX-M · Explainable AI · Fixed evaluation-derived operating thresholds<br>
+    Research dataset: 1,481 images
+</div>
+""", unsafe_allow_html=True)
