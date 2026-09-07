@@ -448,7 +448,7 @@ with st.spinner(
     yolo11_results = yolo11_model.predict(
         source=image_rgb,
         imgsz=640,
-        conf=YOLO11_CONF_THRESHOLD,
+        conf=0.39,
         iou=0.45,
         verbose=False
     )
