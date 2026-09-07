@@ -480,7 +480,7 @@ with st.spinner(
         exp=yolox_exp,
         device=yolox_device,
         image=image_bgr,
-        confidence_threshold=YOLOX_CONF_THRESHOLD
+        confidence_threshold=0.25
     )
 
     yolox_time = (
