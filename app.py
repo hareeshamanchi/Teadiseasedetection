@@ -265,7 +265,7 @@ DISEASE_INFO = {
 
 
 # ============================================================
-# LOAD YOLO11m
+# LOAD AI Detection
 # ============================================================
 
 @st.cache_resource
@@ -279,7 +279,7 @@ def load_yolo11():
 
 
 # ============================================================
-# LOAD YOLOX-M
+# LOAD AI Analysis
 # ============================================================
 
 @st.cache_resource
@@ -296,12 +296,12 @@ def load_yolox():
 
 st.markdown("""
 <div class="hero">
-    <h1>🍃 Tea Leaf Disease Intelligence</h1>
-    <p>Dual-model tea leaf disease detection powered by YOLO11m, YOLOX-M and Explainable AI.</p>
-    <span class="badge">YOLO11m</span>
-    <span class="badge">YOLOX-M</span>
-    <span class="badge">Grad-CAM</span>
-    <span class="badge">1,481-image evaluation</span>
+    <h1>🍃 Tea Leaf Disease Detection</h1>
+    <p>AI-powered tea leaf disease detection with visual explanations.</p>
+    <span class="badge">AI Detection</span>
+    <span class="badge">AI Analysis</span>
+    <span class="badge">Visual Explanation</span>
+    <span class="badge">Image Analysis</span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -310,31 +310,30 @@ st.markdown("""
 # SIDEBAR
 # ============================================================
 
-st.sidebar.title("🍃 Tea AI Console")
+st.sidebar.title("🍃 Tea Leaf AI")
 
 st.sidebar.success("Detection engine ready")
 
 st.sidebar.markdown("### Model Configuration")
 st.sidebar.markdown(
-    "**YOLO11m**  \\n"
+    "**AI Detection**  \\n"
     "Fixed confidence: **39%**"
 )
 st.sidebar.markdown(
-    "**YOLOX-M**  \\n"
+    "**AI Analysis**  \\n"
     "Fixed confidence: **25%**"
 )
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("### Research Configuration")
-st.sidebar.caption("Dataset: Merged_Dataset_2")
-st.sidebar.caption("Evaluation images: 1,481")
+st.sidebar.caption("Dataset: —")
 st.sidebar.caption("Ground-truth boxes: 2,695")
 st.sidebar.caption("No user-facing confidence controls")
 
 st.sidebar.markdown("---")
 st.sidebar.info(
     "Predictions are generated independently by both trained models. "
-    "YOLOX Grad-CAM provides an additional visual explanation."
+    "YOLOX Visual Explanation provides an additional visual explanation."
 )
 
 
@@ -349,7 +348,7 @@ try:
 except Exception as e:
 
     st.error(
-        f"YOLO11m model loading failed:\n\n{e}"
+        f"AI Detection model loading failed:\n\n{e}"
     )
 
     st.stop()
@@ -362,7 +361,7 @@ try:
 except Exception as e:
 
     st.error(
-        f"YOLOX-M model loading failed:\n\n{e}"
+        f"AI Analysis model loading failed:\n\n{e}"
     )
 
     st.stop()
@@ -375,11 +374,11 @@ except Exception as e:
 with st.sidebar:
 
     st.success(
-        "YOLO11m loaded"
+        "AI Detection loaded"
     )
 
     st.success(
-        f"YOLOX-M loaded ({yolox_device})"
+        f"AI Analysis loaded ({yolox_device})"
     )
 
 
@@ -437,11 +436,11 @@ st.image(pil_image, caption=uploaded_file.name, width="stretch")
 
 
 # ============================================================
-# RUN YOLO11m
+# RUN AI Detection
 # ============================================================
 
 with st.spinner(
-    "Running YOLO11m detection..."
+    "Running AI Detection detection..."
 ):
 
     start_time = time.perf_counter()
@@ -467,11 +466,11 @@ yolo11_boxes = yolo11_result.boxes
 
 
 # ============================================================
-# RUN YOLOX-M
+# RUN AI Analysis
 # ============================================================
 
 with st.spinner(
-    "Running YOLOX-M detection..."
+    "Running AI Analysis detection..."
 ):
 
     start_time = time.perf_counter()
@@ -497,7 +496,7 @@ yolox_detections = yolox_result[
 
 
 # ============================================================
-# YOLO11m RESULTS
+# AI Detection RESULTS
 # ============================================================
 
 yolo11_rows = []
@@ -636,12 +635,12 @@ col1, col2 = st.columns(2)
 
 
 # ============================================================
-# YOLO11m CARD
+# AI Detection CARD
 # ============================================================
 
 with col1:
 
-    st.markdown('<div class="model-name">🟦 YOLO11m · Primary Detector</div>', unsafe_allow_html=True)
+    st.markdown('<div class="model-name">🟦 AI Detection · Primary Detector</div>', unsafe_allow_html=True)
 
     if yolo11_top is not None:
 
@@ -667,7 +666,7 @@ with col1:
     else:
 
         st.warning(
-            "YOLO11m found no detections."
+            "AI Detection found no detections."
         )
 
 
@@ -677,7 +676,7 @@ with col1:
 
 with col2:
 
-    st.markdown('<div class="model-name">🟥 YOLOX-M · Independent Detector</div>', unsafe_allow_html=True)
+    st.markdown('<div class="model-name">🟥 AI Analysis · Independent Detector</div>', unsafe_allow_html=True)
 
     if yolox_top is not None:
 
@@ -703,7 +702,7 @@ with col2:
     else:
 
         st.warning(
-            "YOLOX-M found no detections."
+            "AI Analysis found no detections."
         )
 
 
@@ -724,7 +723,7 @@ col1, col2 = st.columns(2)
 with col1:
 
     st.subheader(
-        "YOLO11m Prediction"
+        "AI Detection Prediction"
     )
 
     if yolo11_boxes is not None and len(
@@ -751,7 +750,7 @@ with col1:
     else:
 
         st.info(
-            "No YOLO11m prediction image."
+            "No AI Detection prediction image."
         )
 
 
@@ -760,7 +759,7 @@ with col1:
 with col2:
 
     st.subheader(
-        "YOLOX-M Prediction"
+        "AI Analysis Prediction"
     )
 
     if len(yolox_detections) > 0:
@@ -785,7 +784,7 @@ with col2:
     else:
 
         st.info(
-            "No YOLOX-M prediction image."
+            "No AI Analysis prediction image."
         )
 
 
@@ -804,7 +803,7 @@ col1, col2 = st.columns(2)
 with col1:
 
     st.subheader(
-        "YOLO11m"
+        "AI Detection"
     )
 
     if len(yolo11_df) > 0:
@@ -843,7 +842,7 @@ with col1:
 with col2:
 
     st.subheader(
-        "YOLOX-M"
+        "AI Analysis"
     )
 
     if len(yolox_df) > 0:
@@ -980,11 +979,11 @@ if disease_for_info is not None:
 
 st.markdown("---")
 
-st.markdown('<div class="section-title">🔥 Explainable AI · YOLOX-M Grad-CAM</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">🔥 Explainable AI · AI Analysis Visual Explanation</div>', unsafe_allow_html=True)
 
 st.caption(
     "The heatmap highlights image regions contributing "
-    "to the selected YOLOX-M detection."
+    "to the selected AI Analysis detection."
 )
 
 
@@ -1004,7 +1003,7 @@ if yolox_top is not None:
     )
 
     with st.spinner(
-        "Generating YOLOX-M Grad-CAM..."
+        "Generating AI Analysis Visual Explanation..."
     ):
 
         try:
@@ -1074,7 +1073,7 @@ if yolox_top is not None:
             if ok:
 
                 st.download_button(
-                    "⬇️ Download YOLOX Grad-CAM",
+                    "⬇️ Download YOLOX Visual Explanation",
                     encoded_heatmap.tobytes(),
                     "YOLOX_GradCAM.jpg",
                     "image/jpeg"
@@ -1123,13 +1122,13 @@ if yolox_top is not None:
         except Exception as e:
 
             st.error(
-                f"YOLOX Grad-CAM failed: {e}"
+                f"YOLOX Visual Explanation failed: {e}"
             )
 
 else:
 
     st.info(
-        "YOLOX-M did not produce a detection, "
+        "AI Analysis did not produce a detection, "
         "so a detection-specific heatmap cannot be generated."
     )
 
@@ -1151,7 +1150,7 @@ if yolo11_top is not None:
     comparison_rows.append({
 
         "Model":
-            "YOLO11m",
+            "AI Detection",
 
         "Predicted Disease":
             yolo11_top["Disease"],
@@ -1173,7 +1172,7 @@ if yolox_top is not None:
     comparison_rows.append({
 
         "Model":
-            "YOLOX-M",
+            "AI Analysis",
 
         "Predicted Disease":
             yolox_top["Disease"],
@@ -1241,7 +1240,7 @@ for row in yolo11_rows:
 
     row_copy = row.copy()
 
-    row_copy["Model"] = "YOLO11m"
+    row_copy["Model"] = "AI Detection"
 
     all_download_rows.append(
         row_copy
@@ -1252,7 +1251,7 @@ for row in yolox_rows:
 
     row_copy = row.copy()
 
-    row_copy["Model"] = "YOLOX-M"
+    row_copy["Model"] = "AI Analysis"
 
     all_download_rows.append(
         row_copy
@@ -1288,7 +1287,7 @@ st.markdown("---")
 st.markdown("""
 <div class="footer">
     <b>Tea Leaf Disease Intelligence</b><br>
-    YOLO11m + YOLOX-M · Explainable AI · Fixed evaluation-derived operating thresholds<br>
-    Research dataset: 1,481 images
+    AI Detection + AI Analysis · Explainable AI · Fixed evaluation-derived operating thresholds<br>
+    Research dataset: — images
 </div>
 """, unsafe_allow_html=True)
