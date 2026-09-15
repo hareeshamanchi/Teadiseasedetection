@@ -1,5 +1,7 @@
 import io
 import time
+import gc
+import torch
 
 import cv2
 import numpy as np
@@ -325,12 +327,6 @@ st.sidebar.markdown(
 )
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("### Research Configuration")
-st.sidebar.caption("Dataset: —")
-st.sidebar.caption("Ground-truth boxes: 2,695")
-st.sidebar.caption("No user-facing confidence controls")
-
-st.sidebar.markdown("---")
 st.sidebar.info(
     "Predictions are generated independently by both trained models. "
     "YOLOX Visual Explanation provides an additional visual explanation."
@@ -464,6 +460,11 @@ yolo11_result = yolo11_results[0]
 
 yolo11_boxes = yolo11_result.boxes
 
+gc.collect()
+
+if torch.cuda.is_available():
+    torch.cuda.empty_cache()
+
 
 # ============================================================
 # RUN AI Analysis
@@ -493,6 +494,12 @@ with st.spinner(
 yolox_detections = yolox_result[
     "detections"
 ]
+
+del yolox_result
+gc.collect()
+
+if torch.cuda.is_available():
+    torch.cuda.empty_cache()
 
 
 # ============================================================
@@ -1002,128 +1009,138 @@ if yolox_top is not None:
         ]
     )
 
-    with st.spinner(
-        "Generating AI Analysis Visual Explanation..."
-    ):
+    # Run the expensive Grad-CAM backward pass only when requested.
+    if st.button("🔥 Generate Visual Explanation"):
 
-        try:
+        with st.spinner(
+            "Generating AI Analysis Visual Explanation..."
+        ):
 
-            cam_result = (
-                generate_yolox_gradcam(
-                    model=yolox_model,
-                    exp=yolox_exp,
-                    device=yolox_device,
-                    image=image_bgr,
-                    detection=selected_yolox_detection
-                )
-            )
+            try:
 
-            heatmap_bgr = cam_result[
-                "heatmap"
-            ]
-
-            overlay_bgr = cam_result[
-                "overlay"
-            ]
-
-            col1, col2 = st.columns(2)
-
-            with col1:
-
-                st.subheader(
-                    "YOLOX Heatmap"
+                cam_result = (
+                    generate_yolox_gradcam(
+                        model=yolox_model,
+                        exp=yolox_exp,
+                        device=yolox_device,
+                        image=image_bgr,
+                        detection=selected_yolox_detection
+                    )
                 )
 
-                st.image(
-                    cv2.cvtColor(
-                        heatmap_bgr,
-                        cv2.COLOR_BGR2RGB
-                    ),
-                    width="stretch"
-                )
-
-            with col2:
-
-                st.subheader(
-                    "YOLOX Heatmap + Prediction"
-                )
-
-                st.image(
-                    cv2.cvtColor(
-                        overlay_bgr,
-                        cv2.COLOR_BGR2RGB
-                    ),
-                    width="stretch"
-                )
-
-
-            # ------------------------------------------------
-            # Download heatmap
-            # ------------------------------------------------
-
-            ok, encoded_heatmap = cv2.imencode(
-                ".jpg",
-                heatmap_bgr,
-                [
-                    cv2.IMWRITE_JPEG_QUALITY,
-                    95
+                heatmap_bgr = cam_result[
+                    "heatmap"
                 ]
-            )
 
-            if ok:
-
-                st.download_button(
-                    "⬇️ Download YOLOX Visual Explanation",
-                    encoded_heatmap.tobytes(),
-                    "YOLOX_GradCAM.jpg",
-                    "image/jpeg"
-                )
-
-
-            # ------------------------------------------------
-            # Download overlay
-            # ------------------------------------------------
-
-            ok, encoded_overlay = cv2.imencode(
-                ".jpg",
-                overlay_bgr,
-                [
-                    cv2.IMWRITE_JPEG_QUALITY,
-                    95
+                overlay_bgr = cam_result[
+                    "overlay"
                 ]
-            )
 
-            if ok:
+                col1, col2 = st.columns(2)
 
-                st.download_button(
-                    "⬇️ Download YOLOX Heatmap + Box",
-                    encoded_overlay.tobytes(),
-                    "YOLOX_GradCAM_Prediction.jpg",
-                    "image/jpeg"
+                with col1:
+
+                    st.subheader(
+                        "YOLOX Heatmap"
+                    )
+
+                    st.image(
+                        cv2.cvtColor(
+                            heatmap_bgr,
+                            cv2.COLOR_BGR2RGB
+                        ),
+                        width="stretch"
+                    )
+
+                with col2:
+
+                    st.subheader(
+                        "YOLOX Heatmap + Prediction"
+                    )
+
+                    st.image(
+                        cv2.cvtColor(
+                            overlay_bgr,
+                            cv2.COLOR_BGR2RGB
+                        ),
+                        width="stretch"
+                    )
+
+
+                # ------------------------------------------------
+                # Download heatmap
+                # ------------------------------------------------
+
+                ok, encoded_heatmap = cv2.imencode(
+                    ".jpg",
+                    heatmap_bgr,
+                    [
+                        cv2.IMWRITE_JPEG_QUALITY,
+                        95
+                    ]
+                )
+
+                if ok:
+
+                    st.download_button(
+                        "⬇️ Download YOLOX Visual Explanation",
+                        encoded_heatmap.tobytes(),
+                        "YOLOX_GradCAM.jpg",
+                        "image/jpeg"
+                    )
+
+
+                # ------------------------------------------------
+                # Download overlay
+                # ------------------------------------------------
+
+                ok, encoded_overlay = cv2.imencode(
+                    ".jpg",
+                    overlay_bgr,
+                    [
+                        cv2.IMWRITE_JPEG_QUALITY,
+                        95
+                    ]
+                )
+
+                if ok:
+
+                    st.download_button(
+                        "⬇️ Download YOLOX Heatmap + Box",
+                        encoded_overlay.tobytes(),
+                        "YOLOX_GradCAM_Prediction.jpg",
+                        "image/jpeg"
+                    )
+
+
+                st.write(
+                    f"**CAM target:** "
+                    f"{cam_result['class_name']}"
+                )
+
+                st.write(
+                    f"**Confidence:** "
+                    f"{cam_result['confidence'] * 100:.2f}%"
+                )
+
+                st.write(
+                    f"**Matched raw prediction locations:** "
+                    f"{cam_result['matched_anchor_count']}"
                 )
 
 
-            st.write(
-                f"**CAM target:** "
-                f"{cam_result['class_name']}"
-            )
+            except Exception as e:
 
-            st.write(
-                f"**Confidence:** "
-                f"{cam_result['confidence'] * 100:.2f}%"
-            )
+                st.error(
+                    f"YOLOX Visual Explanation failed: {e}"
+                )
 
-            st.write(
-                f"**Matched raw prediction locations:** "
-                f"{cam_result['matched_anchor_count']}"
-            )
+            finally:
 
+                gc.collect()
 
-        except Exception as e:
-
-            st.error(
-                f"YOLOX Visual Explanation failed: {e}"
-            )
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
 
 else:
 
@@ -1287,7 +1304,6 @@ st.markdown("---")
 st.markdown("""
 <div class="footer">
     <b>Tea Leaf Disease Intelligence</b><br>
-    AI Detection + AI Analysis · Explainable AI · Fixed evaluation-derived operating thresholds<br>
-    Research dataset: — images
+    AI Detection + AI Analysis · Explainable AI
 </div>
 """, unsafe_allow_html=True)
